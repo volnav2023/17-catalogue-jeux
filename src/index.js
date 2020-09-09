@@ -19,9 +19,8 @@ class Grille extends React.Component {
             xIsNext: true,
         };
         for (let i = 0; i < 4; i++) {
-            this.state.jaquettes [i] = 'pic'.concat(i + 1, '.jpg');
+            this.state.jaquettes[i] = 'pic'.concat(i + 1, '.jpg');
         }
-        ;
     }
 
     handleClick(i) {
@@ -43,10 +42,6 @@ class Grille extends React.Component {
         let status;
         return (
             <div>
-                <div className="menu">
-                    <div className="boutons"></div>
-                </div>
-
                 <div className="board-row">
                     {this.renderSquare(0)}
                     {this.renderSquare(1)}
@@ -64,6 +59,23 @@ class Catalogue extends React.Component {
     render() {
         return (
             <div className="catalogue">
+                <div className="menu">
+                    <div className="boutons">
+
+                    </div>
+                    <div className="boutons">
+
+                    </div>
+                    <div className="boutons">
+
+                    </div>
+                    <div className="boutons">
+
+                    </div>
+                    <div className="boutons">
+
+                    </div>
+                </div>
                 <div className="grille">
                     <Grille/>
                 </div>
