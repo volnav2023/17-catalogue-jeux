@@ -2,54 +2,41 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import * as serviceWorker from './serviceWorker';
-
-function Square(props) {
-    return (
-        <button className="square" onClick={props.onClick}>
-            {props.value}
-        </button>
-    );
-}
+import jsondata from './Data.json';
 
 class Grille extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            jaquettes: Array(4).fill(null),
-            xIsNext: true,
+            datajson: jsondata,
         };
-        for (let i = 0; i < 4; i++) {
-            this.state.jaquettes[i] = 'pic'.concat(i + 1, '.jpg');
-        }
+        console.log(this.state.datajson);
+
+        // for (let i = 0; i < 4; i++) {
+        //     this.state.jaquettes[i] = '/assets/img/pic'.concat(i + 1, '.jpg');
+        // }
     }
 
     handleClick(i) {
-        const squares = this.state.jaquettes.slice();
-        squares[i] = this.state.xIsNext ? 'X' : 'O';
-
-        this.setState({squares: squares, xIsNext: !this.state.xIsNext});
+        const jaquettes = this.state.jaquettes.slice();
+        this.setState({jaquettes: jaquettes, xIsNext: !this.state.xIsNext});
     }
 
-    renderSquare(i) {
+    renderGameCard(i) {
         return (
-            <Square
-                value={this.state.jaquettes[i]}
-            />
+            <div>
+                <img src={`./assets/img/${this.state.datajson.games[i].jaquette}`}/>
+                <h1>{this.state.datajson.games[i].title}</h1>
+                <h2>{this.state.datajson.games[i].date}</h2>
+            </div>
         );
     }
 
     render() {
         let status;
         return (
-            <div>
-                <div className="board-row">
-                    {this.renderSquare(0)}
-                    {this.renderSquare(1)}
-                </div>
-                <div className="board-row">
-                    {this.renderSquare(2)}
-                    {this.renderSquare(3)}
-                </div>
+            <div className="board-row">
+                {this.state.datajson.games.map((item, i) => this.renderGameCard(i))}
             </div>
         );
     }
@@ -60,21 +47,6 @@ class Catalogue extends React.Component {
         return (
             <div className="catalogue">
                 <div className="menu">
-                    <div className="boutons">
-
-                    </div>
-                    <div className="boutons">
-
-                    </div>
-                    <div className="boutons">
-
-                    </div>
-                    <div className="boutons">
-
-                    </div>
-                    <div className="boutons">
-
-                    </div>
                 </div>
                 <div className="grille">
                     <Grille/>
