@@ -11,13 +11,9 @@ class Grille extends React.Component {
             donneesJsondansState: donneesJson,
         };
         console.log(this.state.donneesJsondansState);
-
-        // for (let i = 0; i < 4; i++) {
-        //     this.state.jaquettes[i] = '/assets/img/pic'.concat(i + 1, '.jpg');
-        // }
     }
 
-    handleClick(i) {
+    handleClick() {
         const jaquettes = this.state.jaquettes.slice();
         this.setState({jaquettesdansState: jaquettes});
     }
@@ -41,28 +37,29 @@ class Grille extends React.Component {
     }
 }
 
-// class Consigne extends React.Component {
-//
-//     constructor(props) {
-//         super(props);
-//         };
-//
-//     render() {
-//         return (
-//             <button className="consigne" onClick={props.onClicktata}>
-//                 {props.valeur}
-//             </button>
-//         );
-//     }
-//
-// }
+class Bouton extends React.Component {
+
+    constructor(props) {
+        super(props);
+    };
+
+    render() {
+        return (
+            <button className="bouton">
+                Cliquer pour trier
+            </button>
+        );
+    }
+}
 
 class Catalogue extends React.Component {
     render() {
         return (
             <div className="catalogue">
                 <div className="consigne">
-                    {/*<Consigne/>*/}
+                    <Bouton
+                        onClicktata={() => this.handleClick()}
+                    />
                 </div>
                 <div className="grille">
                     <Grille/>

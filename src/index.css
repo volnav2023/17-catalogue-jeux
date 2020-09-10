@@ -22,11 +22,13 @@ ol, ul {
   display: table;
 }
 
-.boutons {
+.bouton {
   margin-bottom: 10px;
+  height: 20px;
+  width: 475px;
 }
 
-.square {
+.grille {
   background: #fff;
   border: 1px solid #999;
   float: left;
@@ -49,7 +51,7 @@ ol, ul {
   background: #ddd;
 }
 
-.catalogue {
+.grille {
   display: flex;
   flex-direction: row;
 }
