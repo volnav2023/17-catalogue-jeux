@@ -2,15 +2,15 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import * as serviceWorker from './serviceWorker';
-import jsondata from './Data.json';
+import donneesJson from './Data.json';
 
 class Grille extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            datajson: jsondata,
+            donneesJsondansState: donneesJson,
         };
-        console.log(this.state.datajson);
+        console.log(this.state.donneesJsondansState);
 
         // for (let i = 0; i < 4; i++) {
         //     this.state.jaquettes[i] = '/assets/img/pic'.concat(i + 1, '.jpg');
@@ -19,34 +19,50 @@ class Grille extends React.Component {
 
     handleClick(i) {
         const jaquettes = this.state.jaquettes.slice();
-        this.setState({jaquettes: jaquettes, xIsNext: !this.state.xIsNext});
+        this.setState({jaquettesdansState: jaquettes});
     }
 
     renderGameCard(i) {
         return (
             <div>
-                <img src={`./assets/img/${this.state.datajson.games[i].jaquette}`}/>
-                <h1>{this.state.datajson.games[i].title}</h1>
-                <h2>{this.state.datajson.games[i].date}</h2>
+                <img src={`./assets/img/${this.state.donneesJsondansState.games[i].jaquette}`}/>
+                <h1>{this.state.donneesJsondansState.games[i].title}</h1>
+                <h2>{this.state.donneesJsondansState.games[i].date}</h2>
             </div>
         );
     }
 
     render() {
-        let status;
         return (
             <div className="board-row">
-                {this.state.datajson.games.map((item, i) => this.renderGameCard(i))}
+                {this.state.donneesJsondansState.games.map((item, i) => this.renderGameCard(i))}
             </div>
         );
     }
 }
 
+// class Consigne extends React.Component {
+//
+//     constructor(props) {
+//         super(props);
+//         };
+//
+//     render() {
+//         return (
+//             <button className="consigne" onClick={props.onClicktata}>
+//                 {props.valeur}
+//             </button>
+//         );
+//     }
+//
+// }
+
 class Catalogue extends React.Component {
     render() {
         return (
             <div className="catalogue">
-                <div className="menu">
+                <div className="consigne">
+                    {/*<Consigne/>*/}
                 </div>
                 <div className="grille">
                     <Grille/>
