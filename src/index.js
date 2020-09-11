@@ -4,26 +4,14 @@ import './index.css';
 import * as serviceWorker from './serviceWorker';
 import donneesJson from './Data.json';
 
-class Grille extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            donneesJsondansState: donneesJson,
-        };
-        console.log(this.state.donneesJsondansState);
-    }
-
-    handleClick() {
-        const jaquettes = this.state.jaquettes.slice();
-        this.setState({jaquettesdansState: jaquettes});
-    }
+class Liste extends React.Component {
 
     renderGameCard(i) {
         return (
             <div>
-                <img src={`./assets/img/${this.state.donneesJsondansState.games[i].jaquette}`}/>
-                <h1>{this.state.donneesJsondansState.games[i].title}</h1>
-                <h2>{this.state.donneesJsondansState.games[i].date}</h2>
+                <img alt={"jaquette"} src={`./assets/img/${this.props.etat.donneesJson.games[i].jaquette}`}/>
+                <h1>{this.props.etat.donneesJson.games[i].title}</h1>
+                <h2>{this.props.etat.donneesJson.games[i].date}</h2>
             </div>
         );
     }
@@ -31,7 +19,7 @@ class Grille extends React.Component {
     render() {
         return (
             <div className="board-row">
-                {this.state.donneesJsondansState.games.map((item, i) => this.renderGameCard(i))}
+                {this.props.etat.donneesJson.games.map((item, i) => this.renderGameCard(i))}
             </div>
         );
     }
@@ -39,30 +27,48 @@ class Grille extends React.Component {
 
 class Bouton extends React.Component {
 
-    constructor(props) {
-        super(props);
+    inverserTri = () => {
+        console.log("Ici inverserTri:");
+        console.log(this.props.etat.donneesJson);
+        console.log(this.props.etat.sensDuTri);
+        if (this.props.etat.sensDuTri === "AZ") {
+            this.props.etat.sensDuTri = "ZA";
+        } else {
+            this.props.etat.sensDuTri = "AZ";
+        }
+        this.setState({ key: Math.random() });
     };
 
     render() {
         return (
-            <button className="bouton">
-                Cliquer pour trier
+            <button key={"bouton"} className="bouton" onClick={this.inverserTri}>
+                Inverser le Tri {this.props.etat.sensDuTri}
             </button>
         );
     }
 }
 
 class Catalogue extends React.Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            donneesJson: donneesJson,
+            sensDuTri: "AZ",
+        };
+        console.log("Ici Catalogue:");
+        console.log(this.state.donneesJson);
+        console.log(this.state.sensDuTri);
+    }
+
     render() {
         return (
             <div className="catalogue">
-                <div className="consigne">
-                    <Bouton
-                        onClicktata={() => this.handleClick()}
-                    />
+                <div className="menu">
+                    <Bouton etat={this.state}/>
                 </div>
-                <div className="grille">
-                    <Grille/>
+                <div className="liste">
+                    <Liste etat={this.state}/>
                 </div>
             </div>
         );
@@ -72,9 +78,10 @@ class Catalogue extends React.Component {
 // ========================================
 
 ReactDOM.render(
-    <React.StrictMode>
+    // <React.StrictMode>
+    <>
         <Catalogue/>
-    </React.StrictMode>,
+    </>,
     document.getElementById('root')
 );
 
