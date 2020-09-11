@@ -9,9 +9,9 @@ class Liste extends React.Component {
     renderGameCard(i) {
         return (
             <div>
-                <img alt={"jaquette"} src={`./assets/img/${this.props.etat.donneesJson.games[i].jaquette}`}/>
-                <h1>{this.props.etat.donneesJson.games[i].title}</h1>
-                <h2>{this.props.etat.donneesJson.games[i].date}</h2>
+                <img alt={"jaquette"} src={`./assets/img/${this.props.etat.listeTriee[i].jaquette}`}/>
+                <h1>{this.props.etat.listeTriee[i].title}</h1>
+                <h2>{this.props.etat.listeTriee[i].date}</h2>
             </div>
         );
     }
@@ -19,7 +19,7 @@ class Liste extends React.Component {
     render() {
         return (
             <div className="board-row">
-                {this.props.etat.donneesJson.games.map((item, i) => this.renderGameCard(i))}
+                {this.props.etat.listeTriee.map((item, i) => this.renderGameCard(i))}
             </div>
         );
     }
@@ -27,8 +27,35 @@ class Liste extends React.Component {
 
 class Bouton extends React.Component {
 
-    inverserTri = () => {
-        console.log("Ici inverserTri:");
+    compareBy(key) {
+        return function (a, b) {
+            if ("" + a[key] < ("" + b[key])) return -1;
+            if ("" + a[key] > ("" + b[key])) return 1;
+            return 0;
+        };
+    }
+
+    sortBy(key, direction) {
+        let arrayCopy = [...this.props.etat.donneesJson.games];
+        console.log("Ici Bouton.sortBy:");
+        console.log(arrayCopy);
+        if (direction === "AZ") {
+            arrayCopy.sort(this.compareBy('title'));
+        } else {
+            arrayCopy.reverse(this.compareBy('title'));
+        }
+        // this.setState({listeTriee : arrayCopy}); --> ne fonctionne pas car c'est le state du Catalogue qu'il faut mettre à jour
+        // Catalogue.setState({listeTriee : arrayCopy});    --> ne fonctionne pas non plus
+        //Catalogue.setCatalogueState(arrayCopy);
+        this.props.surClique(arrayCopy);
+        console.log(arrayCopy);
+        console.log("Ici Bouton.sortBy:");
+        // console.log(this.state.donneesJson);
+        // console.log(this.state.sensDuTri);
+    }
+
+    inverserTri = () => {   // Syntax avec arrow function sans quoi this.props.etat n'est pas définie dans méthode inverserTri'
+        console.log("Ici Bouton.inverserTri:");
         console.log(this.props.etat.donneesJson);
         console.log(this.props.etat.sensDuTri);
         if (this.props.etat.sensDuTri === "AZ") {
@@ -36,10 +63,14 @@ class Bouton extends React.Component {
         } else {
             this.props.etat.sensDuTri = "AZ";
         }
-        this.setState({ key: Math.random() });
+        this.sortBy("title", this.props.etat.sensDuTri);
+
+        this.setState({key: Math.random()});    // Pour forcer rafraîchissement (rerender) de Bouton
+        // Catalogue.render();
     };
 
     render() {
+        console.log(this.props)
         return (
             <button key={"bouton"} className="bouton" onClick={this.inverserTri}>
                 Inverser le Tri {this.props.etat.sensDuTri}
@@ -55,17 +86,22 @@ class Catalogue extends React.Component {
         this.state = {
             donneesJson: donneesJson,
             sensDuTri: "AZ",
+            listeTriee: donneesJson.games,
         };
         console.log("Ici Catalogue:");
         console.log(this.state.donneesJson);
         console.log(this.state.sensDuTri);
     }
 
+    setCatalogueState = (array) => {
+        this.setState({listeTriee : array})
+    }
+
     render() {
         return (
             <div className="catalogue">
                 <div className="menu">
-                    <Bouton etat={this.state}/>
+                    <Bouton surClique={this.setCatalogueState} etat={this.state}/>
                 </div>
                 <div className="liste">
                     <Liste etat={this.state}/>
