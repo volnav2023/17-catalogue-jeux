@@ -19,6 +19,7 @@ class Liste extends React.Component {
     render() {
         return (
             <div className="board-row">
+                //--> map est une boucle for chaque élément du tableau
                 {this.props.etat.listeTriee.map((item, i) => this.renderGameCard(i))}
             </div>
         );
@@ -36,25 +37,26 @@ class Bouton extends React.Component {
     }
 
     sortBy(key, direction) {
-        let arrayCopy = [...this.props.etat.donneesJson.games];
-        console.log("Ici Bouton.sortBy:");
-        console.log(arrayCopy);
+        // console.log("Ici Bouton.sortBy:");
+        // console.log(this.props.etat.donneesJson.games);
         if (direction === "AZ") {
-            arrayCopy.sort(this.compareBy('title'));
+            this.props.etat.donneesJson.games.sort(this.compareBy('title'));
         } else {
-            arrayCopy.reverse(this.compareBy('title'));
+            this.props.etat.donneesJson.games.reverse(this.compareBy('title'));
         }
-        // this.setState({listeTriee : arrayCopy}); --> ne fonctionne pas car c'est le state du Catalogue qu'il faut mettre à jour
-        // Catalogue.setState({listeTriee : arrayCopy});    --> ne fonctionne pas non plus
-        //Catalogue.setCatalogueState(arrayCopy);
-        this.props.surClique(arrayCopy);
-        console.log(arrayCopy);
-        console.log("Ici Bouton.sortBy:");
+        // this.setState({listeTriee : arrayCopy}); //--> ne fonctionne pas car c'est le state du Catalogue qu'il faut mettre à jour
+        // Catalogue.setState({listeTriee : arrayCopy});    //--> ne fonctionne pas
+        // Catalogue.setCatalogueState(arrayCopy);   //--> ne fonctionne pas
+        //La bonne solution ci-dessous, un callback de la méthode passée en paramètre par Catalogue lorsqu'il appelle Bouton
+        this.props.surClique(this.props.etat.donneesJson.games);
+        // console.log(this.props.etat.donneesJson.games); //--> tri non visible car props et state ne changent pas de valeurs avant un ouveau render
+        // console.log("Ici Bouton.sortBy:");
         // console.log(this.state.donneesJson);
         // console.log(this.state.sensDuTri);
     }
 
-    inverserTri = () => {   // Syntax avec arrow function sans quoi this.props.etat n'est pas définie dans méthode inverserTri'
+    // Syntax avec arrow function sans quoi this.props.etat n'est pas définie dans méthode inverserTri'
+    inverserTri = () => {
         console.log("Ici Bouton.inverserTri:");
         console.log(this.props.etat.donneesJson);
         console.log(this.props.etat.sensDuTri);
@@ -73,7 +75,7 @@ class Bouton extends React.Component {
         console.log(this.props)
         return (
             <button key={"bouton"} className="bouton" onClick={this.inverserTri}>
-                Inverser le Tri {this.props.etat.sensDuTri}
+                Inverser le Tri : {this.props.etat.sensDuTri}
             </button>
         );
     }
@@ -101,9 +103,13 @@ class Catalogue extends React.Component {
         return (
             <div className="catalogue">
                 <div className="menu">
+                    {/*on passe la méthode setCatalogueState à Bouton,*/}
+                    {/*elle se retrouve dans this.props.surClique à l'intérieur de Bouton*/}
+                    {/*Bouton va faire un callback de cette méthode en lui passant le tableau this.props.etat.donneesJson.games après l'avoir trié*/}
                     <Bouton surClique={this.setCatalogueState} etat={this.state}/>
                 </div>
                 <div className="liste">
+                    {/*on passe this.state à Liste, il se retrouve dans this.props.etat à l'intérieur de Liste*/}
                     <Liste etat={this.state}/>
                 </div>
             </div>
