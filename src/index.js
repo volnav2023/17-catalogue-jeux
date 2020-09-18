@@ -2,14 +2,17 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import * as serviceWorker from './serviceWorker';
-import donneesJson from './Data.json';
+// import donneesJson from './Data.json';
+import axios from 'axios';
+// const axios = require('axios');
 
 class Liste extends React.Component {
 
     renderGameCard(i) {
         return (
             <div>
-                <img alt={"jaquette"} src={`./assets/img/${this.props.etat.listeTriee[i].jaquette}`}/>
+                <img key={i.toString()} alt={"jaquette"}
+                     src={`./assets/img/${this.props.etat.listeTriee[i].jaquette}`}/>
                 <h1>{this.props.etat.listeTriee[i].title}</h1>
                 <h2>{this.props.etat.listeTriee[i].date}</h2>
             </div>
@@ -17,6 +20,8 @@ class Liste extends React.Component {
     }
 
     render() {
+        console.log("Ici Liste.render : this.props.etat.donneesJson.games");
+        console.log(this.props.etat.donneesJson.games);
         return (
             <div className="board-row">
                 //--> map est une boucle for chaque élément du tableau
@@ -57,9 +62,9 @@ class Bouton extends React.Component {
 
     // Syntax avec arrow function sans quoi this.props.etat n'est pas définie dans méthode inverserTri'
     inverserTri = () => {
-        console.log("Ici Bouton.inverserTri:");
-        console.log(this.props.etat.donneesJson);
-        console.log(this.props.etat.sensDuTri);
+        // console.log("Ici Bouton.inverserTri:");
+        // console.log(this.props.etat.donneesJson);
+        // console.log(this.props.etat.sensDuTri);
         if (this.props.etat.sensDuTri === "AZ") {
             this.props.etat.sensDuTri = "ZA";
         } else {
@@ -72,7 +77,7 @@ class Bouton extends React.Component {
     };
 
     render() {
-        console.log(this.props)
+        // console.log(this.props)
         return (
             <button key={"bouton"} className="bouton" onClick={this.inverserTri}>
                 Inverser le Tri : {this.props.etat.sensDuTri}
@@ -86,20 +91,35 @@ class Catalogue extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            donneesJson: donneesJson,
+            donneesJson: null,
             sensDuTri: "AZ",
-            listeTriee: donneesJson.games,
+            listeTriee: null,
         };
-        console.log("Ici Catalogue:");
-        console.log(this.state.donneesJson);
-        console.log(this.state.sensDuTri);
+        console.log("Ici Catalogue.constructor : this.state");
+        console.log(this.state);
+    }
+
+    componentDidMount() {
+        console.log("Ici Catalogue.componentDidMount : this.state");
+        console.log(this.state);
+        axios.get('http://127.0.0.1:8001/games')
+            .then(response => console.log(response.data))
+            // .then(response => this.setState({donneesJson: response.data, listeTriee: response.games}))
+            .catch(error => console.log(error));
     }
 
     setCatalogueState = (array) => {
-        this.setState({listeTriee : array})
+        this.setState({listeTriee: array})
     }
 
     render() {
+        console.log("Ici Catalogue.render : appel axios");
+        // .then(response => this.setState({donneesJson: response.data, listeTriee: response.games}))
+        axios.get('http://127.0.0.1:8000/games')
+            .then(response => console.log(response.data))
+            .catch(error => console.error(error));
+        console.log("Ici Catalogue.render : this.state");
+        console.log(this.state);
         return (
             <div className="catalogue">
                 <div className="menu">
@@ -110,6 +130,7 @@ class Catalogue extends React.Component {
                 </div>
                 <div className="liste">
                     {/*on passe this.state à Liste, il se retrouve dans this.props.etat à l'intérieur de Liste*/}
+                    console.log("Ici Catalogue.render : appel Liste");
                     <Liste etat={this.state}/>
                 </div>
             </div>
