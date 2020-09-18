@@ -4,6 +4,7 @@ import './index.css';
 import * as serviceWorker from './serviceWorker';
 // import donneesJson from './Data.json';
 import axios from 'axios';
+
 // const axios = require('axios');
 
 class Liste extends React.Component {
@@ -21,14 +22,14 @@ class Liste extends React.Component {
 
     render() {
         // console.log("Ici Liste.render : this.props.etat.donneesJson.games");
-        console.log(this.props);
+        // console.log(this.props);
         // debugger;
-        return "David List.Render"
-            // <div className="board-row">
-            //     //--> map est une boucle for chaque élément du tableau
-            //     {/*{this.props.etat.listeTriee.map((item, i) => this.renderGameCard(i))}*/}
-            // </div>
-        ;
+        // return ("David List.Render")
+        return (
+            <div className="board-row">
+                {this.props.etat.listeTriee.map((item, i) => this.renderGameCard(i))} //--> map est une boucle for chaque élément du tableau
+            </div>
+        );
     }
 }
 
@@ -63,9 +64,9 @@ class Bouton extends React.Component {
 
     // Syntax avec arrow function sans quoi this.props.etat n'est pas définie dans méthode inverserTri'
     inverserTri = () => {
-        console.log("Ici Bouton.inverserTri:");
-        console.log(this.props.etat.liste);
-        console.log(this.props.etat.sensDuTri);
+        // console.log("Ici Bouton.inverserTri:");
+        // console.log(this.props.etat.liste);
+        // console.log(this.props.etat.sensDuTri);
         if (this.props.etat.sensDuTri === "AZ") {
             this.props.etat.sensDuTri = "ZA";
         } else {
@@ -74,7 +75,6 @@ class Bouton extends React.Component {
         this.sortBy("title", this.props.etat.sensDuTri);
 
         this.setState({key: Math.random()});    // Pour forcer rafraîchissement (rerender) de Bouton
-        // Catalogue.render();
     };
 
     render() {
@@ -93,30 +93,30 @@ class Catalogue extends React.Component {
         super(props);
         this.state = {
             liste: [
-                {"title":"Assassin\u0027s Creed","date":"2009","jaquette":"pic1.jpg"},
-                {"title":"Infamous: Second Son","date":"2014","jaquette":"pic3.jpg"},
-                {"title":"Monster Hunter World","date":"2018","jaquette":"pic4.jpg"},
-                {"title":"God of War","date":"2018","jaquette":"pic2.jpg"}
+                {"title": "Assassin\u0027s Creed", "date": "2009", "jaquette": "pic1.jpg"},
+                {"title": "Infamous: Second Son", "date": "2014", "jaquette": "pic3.jpg"},
+                {"title": "Monster Hunter World", "date": "2018", "jaquette": "pic4.jpg"},
+                {"title": "God of War", "date": "2018", "jaquette": "pic2.jpg"}
             ],
             sensDuTri: "AZ",
             listeTriee: [
-                {"title":"Assassin\u0027s Creed","date":"2009","jaquette":"pic1.jpg"},
-                {"title":"Infamous: Second Son","date":"2014","jaquette":"pic3.jpg"},
-                {"title":"Monster Hunter World","date":"2018","jaquette":"pic4.jpg"},
-                {"title":"God of War","date":"2018","jaquette":"pic2.jpg"}
+                {"title": "Assassin\u0027s Creed", "date": "2009", "jaquette": "pic1.jpg"},
+                {"title": "Infamous: Second Son", "date": "2014", "jaquette": "pic3.jpg"},
+                {"title": "Monster Hunter World", "date": "2018", "jaquette": "pic4.jpg"},
+                {"title": "God of War", "date": "2018", "jaquette": "pic2.jpg"}
             ],
         };
-        console.log("Ici Catalogue.constructor : this.state");
-        console.log(this.state);
+        // console.log("Ici Catalogue.constructor : this.state");
+        // console.log(this.state);
     }
 
     componentDidMount() {
-        console.log("Ici Catalogue.componentDidMount : this.state");
-        console.log(this.state);
+        // console.log("Ici Catalogue.componentDidMount : this.state");
+        // console.log(this.state);
         axios.get('http://127.0.0.1:8000/games')
             .then(response => this.setState({liste: response.data.games}))
             .catch(error => console.log(error));
-        console.log(this.state);
+        // console.log(this.state);
     }
 
     setCatalogueState = (array) => {
@@ -124,12 +124,12 @@ class Catalogue extends React.Component {
     }
 
     render() {
-        console.log("Ici Catalogue.render : this.state");
-        console.log(this.state);
+        // console.log("Ici Catalogue.render : this.state");
+        // console.log(this.state);
         return (
             <div className="catalogue">
-                David
-                {JSON.stringify(this.state)}
+                {/*David*/}
+                {/*{JSON.stringify(this.state)}*/}
                 {/*<div className="menu">*/}
                 {/*    /!*on passe la méthode setCatalogueState à Bouton,*!/*/}
                 {/*    /!*elle se retrouve dans this.props.surClique à l'intérieur de Bouton*!/*/}
