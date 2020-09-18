@@ -93,14 +93,14 @@ class Catalogue extends React.Component {
         super(props);
         this.state = {
             liste: [
-                {"title":"Assassin\u0027s Crado","date":"2009","jaquette":"pic1.jpg"},
+                {"title":"Assassin\u0027s Creed","date":"2009","jaquette":"pic1.jpg"},
                 {"title":"Infamous: Second Son","date":"2014","jaquette":"pic3.jpg"},
                 {"title":"Monster Hunter World","date":"2018","jaquette":"pic4.jpg"},
                 {"title":"God of War","date":"2018","jaquette":"pic2.jpg"}
             ],
             sensDuTri: "AZ",
             listeTriee: [
-                {"title":"Assassin\u0027s Crado","date":"2009","jaquette":"pic1.jpg"},
+                {"title":"Assassin\u0027s Creed","date":"2009","jaquette":"pic1.jpg"},
                 {"title":"Infamous: Second Son","date":"2014","jaquette":"pic3.jpg"},
                 {"title":"Monster Hunter World","date":"2018","jaquette":"pic4.jpg"},
                 {"title":"God of War","date":"2018","jaquette":"pic2.jpg"}
@@ -114,8 +114,7 @@ class Catalogue extends React.Component {
         console.log("Ici Catalogue.componentDidMount : this.state");
         console.log(this.state);
         axios.get('http://127.0.0.1:8000/games')
-            .then(response => console.log(response.data))
-            // .then(response => this.setState({games: response.data.games}))
+            .then(response => this.setState({liste: response.data.games}))
             .catch(error => console.log(error));
         console.log(this.state);
     }
