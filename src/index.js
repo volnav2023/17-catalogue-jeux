@@ -27,7 +27,8 @@ class Liste extends React.Component {
         // return ("David List.Render")
         return (
             <div className="board-row">
-                {this.props.etat.listeTriee.map((item, i) => this.renderGameCard(i))} //--> map est une boucle for chaque élément du tableau
+                {this.props.etat.listeTriee.map((item, i) =>
+                    this.renderGameCard(i))} //--> map est une boucle for chaque élément du tableau
             </div>
         );
     }
@@ -91,6 +92,9 @@ class Catalogue extends React.Component {
 
     constructor(props) {
         super(props);
+        // Initialise this.state pour éviter de planter au premier render
+        // qui a lieu avant que les données ne soient lues depuis
+        // l'API http://127.0.0.1:8000/games dans componentDidMount
         this.state = {
             liste: [
                 {"title": "Assassin\u0027s Creed", "date": "2009", "jaquette": "pic1.jpg"},
