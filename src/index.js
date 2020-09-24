@@ -117,7 +117,7 @@ class Catalogue extends React.Component {
     componentDidMount() {
         console.log("Ici Catalogue.componentDidMount : this.state");
         console.log(this.state);
-        axios.get('http://127.0.0.1:8000/games')
+        axios.get('http://127.0.0.1:8000/game')
             .then(response => this.setState({liste: response.data.games}))
             .catch(error => console.log(error));
         console.log(this.state);
