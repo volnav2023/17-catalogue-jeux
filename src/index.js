@@ -13,22 +13,21 @@ class Liste extends React.Component {
         return (
             <div>
                 <img key={i.toString()} alt={"jaquette"}
-                     src={`./assets/img/${this.props.etat.listeTriee[i].jaquette}`}/>
-                <h1>{this.props.etat.listeTriee[i].title}</h1>
-                <h2>{this.props.etat.listeTriee[i].date}</h2>
+                     src={`./assets/img/${this.props.etat.liste[i].jaquette}`}/>
+                <h1>{this.props.etat.liste[i].title}</h1>
+                <h2>{this.props.etat.liste[i].date}</h2>
             </div>
         );
     }
 
     render() {
-        // console.log("Ici Liste.render : this.props.etat.donneesJson.games");
-        // console.log(this.props);
+        console.log("Ici Liste.render : this.props");
+        console.log(this.props);
         // debugger;
-        // return ("David List.Render")
         return (
             <div className="board-row">
-                {this.props.etat.listeTriee.map((item, i) =>
-                    this.renderGameCard(i))} //--> map est une boucle for chaque élément du tableau
+                {this.props.etat.liste.map((item, i) =>
+                    this.renderGameCard(i))}
             </div>
         );
     }
@@ -79,7 +78,8 @@ class Bouton extends React.Component {
     };
 
     render() {
-        // console.log(this.props)
+        console.log("Ici Bouton.render : this.props");
+        console.log(this.props);
         return (
             <button key={"bouton"} className="bouton" onClick={this.inverserTri}>
                 Inverser le Tri : {this.props.etat.sensDuTri}
@@ -95,56 +95,86 @@ class Catalogue extends React.Component {
         // Initialise this.state pour éviter de planter au premier render
         // qui a lieu avant que les données ne soient lues depuis
         // l'API http://127.0.0.1:8000/games dans componentDidMount
+        // L'initialisation peut-être à vide.
+        // this.state = {
+        //     liste: [
+        //         {"title": "Assassin\u0027s Creed", "date": "2009", "jaquette": "pic1.jpg"},
+        //         {"title": "Infamous: Second Son", "date": "2014", "jaquette": "pic3.jpg"},
+        //         {"title": "Monster Hunter World", "date": "2018", "jaquette": "pic4.jpg"},
+        //         {"title": "God of War", "date": "2018", "jaquette": "pic2.jpg"}
+        //     ],
+        //     sensDuTri: "AZ",
+        //     listeTriee: [
+        //         {"title": "Assassin\u0027s Creed", "date": "2009", "jaquette": "pic1.jpg"},
+        //         {"title": "Infamous: Second Son", "date": "2014", "jaquette": "pic3.jpg"},
+        //         {"title": "Monster Hunter World", "date": "2018", "jaquette": "pic4.jpg"},
+        //         {"title": "God of War", "date": "2018", "jaquette": "pic2.jpg"}
+        //     ],
+        // };
         this.state = {
-            liste: [
-                {"title": "Assassin\u0027s Creed", "date": "2009", "jaquette": "pic1.jpg"},
-                {"title": "Infamous: Second Son", "date": "2014", "jaquette": "pic3.jpg"},
-                {"title": "Monster Hunter World", "date": "2018", "jaquette": "pic4.jpg"},
-                {"title": "God of War", "date": "2018", "jaquette": "pic2.jpg"}
-            ],
+            liste: [],
             sensDuTri: "AZ",
-            listeTriee: [
-                {"title": "Assassin\u0027s Creed", "date": "2009", "jaquette": "pic1.jpg"},
-                {"title": "Infamous: Second Son", "date": "2014", "jaquette": "pic3.jpg"},
-                {"title": "Monster Hunter World", "date": "2018", "jaquette": "pic4.jpg"},
-                {"title": "God of War", "date": "2018", "jaquette": "pic2.jpg"}
-            ],
         };
         // console.log("Ici Catalogue.constructor : this.state");
         // console.log(this.state);
     }
 
     componentDidMount() {
-        console.log("Ici Catalogue.componentDidMount : this.state");
+        console.log("Ici Catalogue.componentDidMount : this.state avant axios");
         console.log(this.state);
+        // debugger;
         axios.get('http://127.0.0.1:8000/game')
-            .then(response => this.setState({liste: response.data.games}))
+            .then(response => {
+                    console.log("Ici axios.get : response.data est un tableau de 4 collections");
+                    console.log(response.data);
+                    console.log("Ici axios.get : response.data[0] est le premier élément du tableau de 4");
+                    console.log(response.data[0]);
+                    console.log("Ici axios.get : response.data[0].title");
+                    console.log(response.data[0].title);
+                    console.log("Ici axios.get : response.data[0][0]");
+                    console.log(response.data[0][0]);
+                    // debugger;
+                    // let reponseFormattee = [];
+                    // reponseFormattee = response.data;
+                    // reponseFormattee[0] = [
+                    //     response.data[0][0],
+                    //     response.data[0][1],
+                    //     response.data[0][2],
+                    // ];
+                    // reponseFormattee[0] = [
+                    //     response.data[0].title,
+                    //     response.data[0].date,
+                    //     response.data[0].jaquette,
+                    // ];
+                    // let test = reponseFormattee[0][0];
+
+                    // console.log("Ici axios.get : reponseFormattee");
+                    // console.log(reponseFormattee);
+                    this.setState({liste: response.data})
+                }
+            )
             .catch(error => console.log(error));
+        console.log("Ici Catalogue.componentDidMount : this.state après axios");
         console.log(this.state);
     }
 
+    // Nécessaire pour forcer un render de Catalogue à chaque click sur Bouton
     setCatalogueState = (array) => {
-        this.setState({listeTriee: array})
+        this.setState({liste: array})
     }
 
     render() {
-        // console.log("Ici Catalogue.render : this.state");
-        // console.log(this.state);
+        console.log("Ici Catalogue.render : this.state");
+        console.log(this.state);
         return (
             <div className="catalogue">
-                {/*David*/}
-                {/*{JSON.stringify(this.state)}*/}
-                {/*<div className="menu">*/}
-                {/*    /!*on passe la méthode setCatalogueState à Bouton,*!/*/}
-                {/*    /!*elle se retrouve dans this.props.surClique à l'intérieur de Bouton*!/*/}
-                {/*    /!*Bouton va faire un callback de cette méthode en lui passant le tableau this.props.etat.donneesJson.games après l'avoir trié*!/*/}
+                {/*on passe la méthode setCatalogueState à Bouton,*/}
+                {/*elle se retrouve dans this.props.surClique à l'intérieur de Bouton*/}
+                {/*Bouton va faire un callback de cette méthode en lui passant le tableau this.props.etat.liste après l'avoir trié*/}
                 <Bouton surClique={this.setCatalogueState} etat={this.state}/>
-                {/*</div>*/}
-                {/*<div className="liste">*/}
-                {/*    /!*on passe this.state à Liste, il se retrouve dans this.props.etat à l'intérieur de Liste*!/*/}
-                {/*    console.log("Ici Catalogue.render : appel Liste");*/}
+                {/*on passe this.state à Liste, il se retrouve dans this.props.etat à l'intérieur de Liste*!/*/}
+                {/*console.log("Ici Catalogue.render : appel Liste");*/}
                 <Liste etat={this.state}/>
-                {/*</div>*/}
             </div>
         );
     }
