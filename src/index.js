@@ -9,11 +9,19 @@ import axios from 'axios';
 
 class Liste extends React.Component {
 
-    renderCommentaire(j) {
-        return undefined;
+    renderUnCommentaire(i, j) {
+        return (
+            <div>
+                <h3>{this.props.etat.liste[i].comments[j].text}</h3>
+                {/*on passe la méthode setCatalogueState à BoutonSupprCommentaire,*/}
+                {/*elle se retrouve dans this.props.surClique à l'intérieur de BoutonSupprCommentaire*/}
+                {/*BoutonSupprCommentaire va faire un callback de cette méthode en lui passant le tableau this.props.etat.liste après avoir supprimé le commentaire*/}
+                <BoutonSupprCommentaire surClique={this.setCatalogueState} etat={this.props.etat} i={i} j={j}/>
+            </div>
+        );
     }
 
-    renderUnJeux(i) {
+    renderUnJeu(i) {
         return (
             <div>
                 <img key={i.toString()} alt={"jaquette"}
@@ -22,8 +30,7 @@ class Liste extends React.Component {
                 <h2>{this.props.etat.liste[i].date}</h2>
                 <div className="ligneDeCommentaire">
                     {this.props.etat.liste[i].comments.map((item, j) =>
-                        <h3>{this.props.etat.liste[i].comments[j].text}</h3>)
-                    }
+                        this.renderUnCommentaire(i, j))}
                 </div>
             </div>
         );
@@ -36,13 +43,42 @@ class Liste extends React.Component {
         return (
             <div className="liste">
                 {this.props.etat.liste.map((item, i) =>
-                    this.renderUnJeux(i))}
+                    this.renderUnJeu(i))}
             </div>
         );
     }
 }
 
-class Bouton extends React.Component {
+class BoutonSupprCommentaire extends React.Component {
+
+    // Syntax avec arrow function sans quoi this.props.etat n'est pas définie dans méthode inverserTri'
+    supprCommentaire = () => {
+        console.log("Ici BoutonSupprCommentaire.supprCommentaire: this.props.etat.liste[this.props.i].comments[this.props.j].id");
+        // console.log(this.props.etat.liste);
+        console.log(this.props.etat.liste[this.props.i].comments[this.props.j].id);
+
+        axios.delete('http://127.0.0.1:8000/comment/' + this.props.etat.liste[this.props.i].comments[this.props.j].id)
+
+            .then(response => {
+                    this.setState({liste: response.data})
+                }
+            )
+            .catch(error => console.log(error));
+    };
+
+    render() {
+        console.log("Ici BoutonSupprCommentaire.render : this.props");
+        console.log(this.props);
+        return (
+            <button key={"boutonSupprCommentaire"} className="bouton" onClick={this.supprCommentaire}>
+                Suppr. Commentaire
+            </button>
+        );
+    }
+
+}
+
+class BoutonTri extends React.Component {
 
     compareBy(key) {
         return function (a, b) {
@@ -53,7 +89,7 @@ class Bouton extends React.Component {
     }
 
     sortBy(key, direction) {
-        // console.log("Ici Bouton.sortBy:");
+        // console.log("Ici BoutonTri.sortBy:");
         // console.log(this.props.etat.donneesJson.games);
         if (direction === "AZ") {
             this.props.etat.liste.sort(this.compareBy('title'));
@@ -63,17 +99,17 @@ class Bouton extends React.Component {
         // this.setState({listeTriee : arrayCopy}); //--> ne fonctionne pas car c'est le state du Catalogue qu'il faut mettre à jour
         // Catalogue.setState({listeTriee : arrayCopy});    //--> ne fonctionne pas
         // Catalogue.setCatalogueState(arrayCopy);   //--> ne fonctionne pas
-        //La bonne solution ci-dessous, un callback de la méthode passée en paramètre par Catalogue lorsqu'il appelle Bouton
+        //La bonne solution ci-dessous, un callback de la méthode passée en paramètre par Catalogue lorsqu'il appelle BoutonTri
         this.props.surClique(this.props.etat.liste);
         // console.log(this.props.etat.donneesJson.games); //--> tri non visible car props et state ne changent pas de valeurs avant un ouveau render
-        // console.log("Ici Bouton.sortBy:");
+        // console.log("Ici BoutonTri.sortBy:");
         // console.log(this.state.donneesJson);
         // console.log(this.state.sensDuTri);
     }
 
     // Syntax avec arrow function sans quoi this.props.etat n'est pas définie dans méthode inverserTri'
     inverserTri = () => {
-        // console.log("Ici Bouton.inverserTri:");
+        // console.log("Ici BoutonTri.inverserTri:");
         // console.log(this.props.etat.liste);
         // console.log(this.props.etat.sensDuTri);
         if (this.props.etat.sensDuTri === "AZ") {
@@ -83,14 +119,14 @@ class Bouton extends React.Component {
         }
         this.sortBy("title", this.props.etat.sensDuTri);
 
-        this.setState({key: Math.random()});    // Pour forcer rafraîchissement (rerender) de Bouton
+        this.setState({key: Math.random()});    // Pour forcer rafraîchissement (rerender) de BoutonTri
     };
 
     render() {
-        console.log("Ici Bouton.render : this.props");
+        console.log("Ici BoutonTri.render : this.props");
         console.log(this.props);
         return (
-            <button key={"bouton"} className="bouton" onClick={this.inverserTri}>
+            <button key={"boutonTri"} className="bouton" onClick={this.inverserTri}>
                 Inverser le Tri : {this.props.etat.sensDuTri}
             </button>
         );
@@ -132,7 +168,7 @@ class Catalogue extends React.Component {
         console.log("Ici Catalogue.componentDidMount : this.state avant axios");
         console.log(this.state);
         // debugger;
-        axios.get('http://127.0.0.1:8000/game')
+        axios.get('http://127.0.0.1:8000/gameList')
             .then(response => {
                     console.log("Ici axios.get : response.data est un tableau de 4 collections");
                     console.log(response.data);
@@ -167,7 +203,7 @@ class Catalogue extends React.Component {
         console.log(this.state);
     }
 
-    // Nécessaire pour forcer un render de Catalogue à chaque click sur Bouton
+    // Nécessaire pour forcer un render de Catalogue à chaque click sur un bouton
     setCatalogueState = (array) => {
         this.setState({liste: array})
     }
@@ -177,10 +213,10 @@ class Catalogue extends React.Component {
         console.log(this.state);
         return (
             <div className="catalogue">
-                {/*on passe la méthode setCatalogueState à Bouton,*/}
-                {/*elle se retrouve dans this.props.surClique à l'intérieur de Bouton*/}
-                {/*Bouton va faire un callback de cette méthode en lui passant le tableau this.props.etat.liste après l'avoir trié*/}
-                <Bouton surClique={this.setCatalogueState} etat={this.state}/>
+                {/*on passe la méthode setCatalogueState à BoutonTri,*/}
+                {/*elle se retrouve dans this.props.surClique à l'intérieur de BoutonTri*/}
+                {/*BoutonTri va faire un callback de cette méthode en lui passant le tableau this.props.etat.liste après l'avoir trié*/}
+                <BoutonTri surClique={this.setCatalogueState} etat={this.state}/>
                 {/*on passe this.state à Liste, il se retrouve dans this.props.etat à l'intérieur de Liste*!/*/}
                 {/*console.log("Ici Catalogue.render : appel Liste");*/}
                 <Liste etat={this.state}/>
