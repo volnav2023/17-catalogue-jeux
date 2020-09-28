@@ -9,13 +9,22 @@ import axios from 'axios';
 
 class Liste extends React.Component {
 
-    renderGameCard(i) {
+    renderCommentaire(j) {
+        return undefined;
+    }
+
+    renderUnJeux(i) {
         return (
             <div>
                 <img key={i.toString()} alt={"jaquette"}
                      src={`./assets/img/${this.props.etat.liste[i].jaquette}`}/>
                 <h1>{this.props.etat.liste[i].title}</h1>
                 <h2>{this.props.etat.liste[i].date}</h2>
+                <div className="ligneDeCommentaire">
+                    {this.props.etat.liste[i].comments.map((item, j) =>
+                        <h3>{this.props.etat.liste[i].comments[j].text}</h3>)
+                    }
+                </div>
             </div>
         );
     }
@@ -25,9 +34,9 @@ class Liste extends React.Component {
         console.log(this.props);
         // debugger;
         return (
-            <div className="board-row">
+            <div className="liste">
                 {this.props.etat.liste.map((item, i) =>
-                    this.renderGameCard(i))}
+                    this.renderUnJeux(i))}
             </div>
         );
     }
